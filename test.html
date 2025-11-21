@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #334155;
+            border-radius: 5px;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        button {
+            padding: 10px 20px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #4f46e5; }
+    </style>
+</head>
+<body>
+    <h1>Modern Assyrian GPT - API Connection Diagnostic</h1>
+    
+    <div class="result">
+        <strong>Current Location:</strong> <span id="location"></span><br>
+        <strong>User Agent:</strong> <span id="userAgent"></span><br>
+        <strong>Network Status:</strong> <span id="networkStatus"></span>
+    </div>
+
+    <h2>Test API Connection</h2>
+    <label>
+        API URL: 
+        <input type="text" id="apiUrl" value="http://10.0.0.205:8000" style="width: 300px; padding: 5px;">
+    </label>
+    <br><br>
+    
+    <button onclick="testConnection()">Test /health Endpoint</button>
+    <button onclick="testGenerate()">Test /generate Endpoint</button>
+    
+    <h3>Results:</h3>
+    <div id="results"></div>
+
+    <script>
+        // Display client info
+        document.getElementById('location').textContent = window.location.href;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        document.getElementById('networkStatus').textContent = navigator.onLine ? 'Online' : 'Offline';
+
+        window.addEventListener('online', () => {
+            document.getElementById('networkStatus').textContent = 'Online';
+        });
+        
+        window.addEventListener('offline', () => {
+            document.getElementById('networkStatus').textContent = 'Offline';
+        });
+
+        function addResult(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'result ' + (isError ? 'error' : 'success');
+            div.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            document.getElementById('results').prepend(div);
+        }
+
+        async function testConnection() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            addResult('Testing connection to: ' + apiUrl + '/health');
+            
+            try {
+                const start = Date.now();
+                const response = await fetch(apiUrl + '/health', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const duration = Date.now() - start;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(`✓ Connected successfully in ${duration}ms - Status: ${data.status}, Device: ${data.device}`);
+                    console.log('Health response:', data);
+                } else {
+                    addResult(`✗ HTTP ${response.status}: ${response.statusText}`, true);
+                }
+            } catch (error) {
+                addResult(`✗ Connection failed: ${error.message}`, true);
+                console.error('Connection error:', error);
+            }
+        }
+
+        async function testGenerate() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            addResult('Testing /generate endpoint...');
+            
+            try {
+                const start = Date.now();
+                const response = await fetch(apiUrl + '/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: 'ܫܠܡܐ',
+                        max_tokens: 20,
+                        temperature: 0.8,
+                        top_k: 40
+                    })
+                });
+                const duration = Date.now() - start;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(`✓ Generate successful in ${duration}ms - Generated: ${data.generated_text.substring(0, 50)}...`);
+                    console.log('Generate response:', data);
+                } else {
+                    const errorText = await response.text();
+                    addResult(`✗ HTTP ${response.status}: ${errorText}`, true);
+                }
+            } catch (error) {
+                addResult(`✗ Generate failed: ${error.message}`, true);
+                console.error('Generate error:', error);
+            }
+        }
+
+        // Auto-test on load
+        setTimeout(testConnection, 500);
+    </script>
+</body>
+</html>

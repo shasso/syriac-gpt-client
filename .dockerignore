@@ -1,0 +1,18 @@
+# Ignore git metadata
+.git
+.gitignore
+
+# Node modules (not used but future-proof)
+node_modules/
+
+# Editors/OS
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Python cache if any local scripts used
+__pycache__/

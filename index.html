@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Modern Assyrian GPT Chat</title>
+    <link rel="stylesheet" href="style.css?v=1">
+    <!-- Modern Assyrian Fonts from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Syriac:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Additional Syriac fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">ܡܡܠܠܐ GPT</h1>
+                <p class="subtitle">Modern Assyrian Language Model Chat</p>
+            </div>
+            <button class="settings-btn" id="settingsBtn" title="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.908l-4.242 4.242M23 12h-6m-6 0H1m15.196 5.196l-4.242-4.242m0-5.908l-4.242-4.242"></path>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-content">
+                <h3>Settings</h3>
+                
+                <div class="setting-group">
+                    <label for="fontSelect">Modern Assyrian Font</label>
+                    <select id="fontSelect" class="setting-select">
+                        <option value="Noto Sans Syriac">Noto Sans Syriac</option>
+                        <option value="Scheherazade New">Scheherazade New</option>
+                        <option value="Estrangelo Edessa">Estrangelo Edessa</option>
+                        <option value="Serto Jerusalem">Serto Jerusalem</option>
+                        <option value="East Syriac Adiabene">East Syriac Adiabene</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label for="fontSizeRange">Font Size: <span id="fontSizeValue">16</span>px</label>
+                    <input type="range" id="fontSizeRange" min="12" max="32" value="16" class="setting-range">
+                </div>
+
+                <div class="setting-group">
+                    <label for="temperatureRange">Temperature: <span id="temperatureValue">0.8</span></label>
+                    <input type="range" id="temperatureRange" min="0.1" max="2.0" step="0.1" value="0.8" class="setting-range">
+                </div>
+
+                <div class="setting-group">
+                    <label for="maxTokensInput">Max Tokens</label>
+                    <input type="number" id="maxTokensInput" min="10" max="200" value="50" class="setting-input">
+                </div>
+
+                <div class="setting-group">
+                    <label for="topKInput">Top-K Sampling</label>
+                    <input type="number" id="topKInput" min="1" max="100" value="40" class="setting-input">
+                </div>
+
+                <div class="setting-group">
+                    <label for="apiUrlInput">API URL</label>
+                    <input type="text" id="apiUrlInput" value="http://localhost:8000" class="setting-input">
+                </div>
+
+                <button class="close-settings-btn" id="closeSettingsBtn">Close</button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <div class="welcome-icon">ܐ</div>
+                <h2>Welcome to Modern Assyrian GPT</h2>
+                <p>Start a conversation in Modern Assyrian. Type your message below.</p>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <textarea 
+                id="messageInput" 
+                class="message-input" 
+                placeholder="Type your Modern Assyrian message here... ܟܬܘܼܒ݂ ܠܲܐܟ݂ܵܐ "
+                rows="1"
+            ></textarea>
+            <button class="send-btn" id="sendBtn" title="Send message">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar" id="statusBar">
+            <span class="status-indicator" id="statusIndicator">●</span>
+            <span class="status-text" id="statusText">Disconnected</span>
+            <button class="reconnect-btn" id="reconnectBtn" style="display: none;">Reconnect</button>
+        </div>
+    </div>
+
+    <script src="app.js?v=1"></script>
+</body>
+</html>

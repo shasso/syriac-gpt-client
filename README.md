@@ -258,7 +258,7 @@ Request format for `/generate`:
     "max_new_tokens": 50,
     "temperature": 0.8,
     "top_k": 40,
-    "model_id": "assyrian-default"
+    "model_id": "Assur-SPM8K-Scribes-4M"
 }
 ```
 

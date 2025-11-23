@@ -32,8 +32,12 @@ const elements = {
     modelSelect: document.getElementById('modelSelect'),
     statusIndicator: document.getElementById('statusIndicator'),
     statusText: document.getElementById('statusText'),
-    reconnectBtn: document.getElementById('reconnectBtn')
+    reconnectBtn: document.getElementById('reconnectBtn'),
+    modelIndicator: document.getElementById('modelIndicator')
 };
+
+// Cache for models response
+let MODELS_CACHE = null;
 
 // Initialize App
 async function init() {
@@ -55,6 +59,7 @@ async function loadAvailableModels() {
         const response = await fetch(`${CONFIG.apiUrl}/models`);
         if (response.ok) {
             const data = await response.json();
+            MODELS_CACHE = data;
             const select = elements.modelSelect;
             select.innerHTML = '<option value="">API Default</option>';
             
@@ -74,9 +79,30 @@ async function loadAvailableModels() {
             if (CONFIG.modelId) {
                 select.value = CONFIG.modelId;
             }
+
+            updateModelIndicator();
         }
     } catch (e) {
         console.warn('Failed to load models:', e);
+    }
+}
+
+function updateModelIndicator() {
+    if (!elements.modelIndicator) return;
+    if (CONFIG.modelId) {
+        elements.modelIndicator.textContent = `Model: ${CONFIG.modelId}`;
+        // If we have a description, set tooltip
+        if (MODELS_CACHE && MODELS_CACHE.models && MODELS_CACHE.models[CONFIG.modelId]) {
+            elements.modelIndicator.title = MODELS_CACHE.models[CONFIG.modelId].description || CONFIG.modelId;
+        } else {
+            elements.modelIndicator.title = 'Selected model';
+        }
+    } else if (MODELS_CACHE && MODELS_CACHE.active) {
+        elements.modelIndicator.textContent = `Model: ${MODELS_CACHE.active} (API default)`;
+        elements.modelIndicator.title = 'Using API active model';
+    } else {
+        elements.modelIndicator.textContent = 'Model: API Default';
+        elements.modelIndicator.title = 'Using API active model';
     }
 }
 
@@ -182,6 +208,7 @@ function attachEventListeners() {
     elements.modelSelect.addEventListener('change', (e) => {
         CONFIG.modelId = e.target.value || null;
         saveSettings();
+        updateModelIndicator();
     });
 
     // Close settings when clicking outside
@@ -339,9 +366,11 @@ function addMessage(text, sender, metrics = null) {
         const tokensPerSec = metrics.avg_tokens_per_second || 0;
         const lastLatency = metrics.last_request_latency || 0;
         const totalTokens = metrics.total_generated_tokens || 0;
+        const activeModel = metrics.active_model_id || 'unknown';
         
         metricsHtml = `
             <div class="message-metrics">
+                <span class="metric-item">🤖 ${escapeHtml(activeModel)}</span>
                 <span class="metric-item">⚡ ${tokensPerSec.toFixed(1)} tok/s</span>
                 <span class="metric-item">⏱️ ${lastLatency.toFixed(2)}s</span>
                 <span class="metric-item">📊 ${totalTokens} total</span>
@@ -351,6 +380,12 @@ function addMessage(text, sender, metrics = null) {
     
     messageDiv.innerHTML = `
         <div class="message-content">
+            <button class="copy-btn" title="Copy to clipboard" aria-label="Copy message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
             <div class="message-text" style="font-family: '${CONFIG.font}', serif; font-size: ${CONFIG.fontSize}px;">
                 ${escapeHtml(text)}
             </div>
@@ -434,3 +469,58 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
+// Copy helpers
+async function copyTextToClipboard(text) {
+    // Try modern async clipboard API first
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch (_) {
+        // fall through to legacy
+    }
+    // Legacy fallback using a temporary textarea
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.pointerEvents = 'none';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+    } catch (err) {
+        console.warn('Legacy copy failed:', err);
+        return false;
+    }
+}
+
+// Global event delegation for copy buttons
+document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    const content = btn.closest('.message-content');
+    if (!content) return;
+    const textEl = content.querySelector('.message-text');
+    const text = textEl ? textEl.innerText : '';
+    if (!text) return;
+    const success = await copyTextToClipboard(text);
+    if (success) {
+        btn.classList.add('copied');
+        const prevTitle = btn.title;
+        btn.title = 'Copied!';
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.title = prevTitle;
+        }, 1000);
+    } else {
+        console.warn('Copy not permitted by browser or context.');
+    }
+});

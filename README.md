@@ -9,6 +9,8 @@ A modern, responsive web chat interface for the Modern Assyrian GPT API with cus
 - ⚙️ Adjustable font size
 - 🎛️ Configurable generation parameters (temperature, max tokens, top-k)
 - 🤖 **Dynamic model selection** - Choose between available GPT models
+- 📋 **Copy to clipboard** - One-click copy for generated text
+- 📊 **Model indicator** - Shows active model in status bar and message metrics
 - 💬 Real-time chat interface
 - 📱 Mobile-friendly design
 - 🔄 Automatic reconnection
@@ -141,7 +143,9 @@ docker compose up -d
 1. Type your Modern Assyrian message in the input box at the bottom
 2. Press Enter or click the send button
 3. Wait for the GPT model to generate a response
-4. Continue the conversation naturally
+4. Hover over any message to reveal the copy button (📋) and click to copy text to clipboard
+5. View model name and performance metrics below each response
+6. Continue the conversation naturally
 
 ### Settings
 
@@ -156,6 +160,21 @@ Click the gear icon (⚙️) in the top-right to access settings:
 - **API URL**: Change the backend API endpoint
 
 All settings are automatically saved to your browser's localStorage.
+
+### Status Bar
+
+The bottom status bar displays:
+- **Connection status**: Green dot when connected to API
+- **Model indicator**: Shows currently selected model (or API default)
+- **Reconnect button**: Appears when disconnected
+
+### Message Metrics
+
+Each assistant response includes:
+- 🤖 **Model name**: Which model generated the response
+- ⚡ **Tokens/second**: Generation speed
+- ⏱️ **Latency**: Response time
+- 📊 **Total tokens**: Cumulative tokens generated
 
 ## Keyboard Shortcuts
 

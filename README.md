@@ -8,6 +8,7 @@ A modern, responsive web chat interface for the Modern Assyrian GPT API with cus
 - 🔤 Multiple Modern Assyrian font options (Noto Sans Syriac, Scheherazade New, etc.)
 - ⚙️ Adjustable font size
 - 🎛️ Configurable generation parameters (temperature, max tokens, top-k)
+- 🤖 **Dynamic model selection** - Choose between available GPT models
 - 💬 Real-time chat interface
 - 📱 Mobile-friendly design
 - 🔄 Automatic reconnection
@@ -146,6 +147,7 @@ docker compose up -d
 
 Click the gear icon (⚙️) in the top-right to access settings:
 
+- **Model**: Select from available GPT models (fetched from API)
 - **Modern Assyrian Font**: Choose from multiple Modern Assyrian fonts
 - **Font Size**: Adjust text size (12-32px)
 - **Temperature**: Control randomness (0.1-2.0)
@@ -246,7 +248,8 @@ No build process required - pure HTML/CSS/JavaScript!
 The client expects the API to have these endpoints:
 
 - `GET /health` - Check API status
-- `POST /generate` - Generate text
+- `GET /models` - List available models (returns active, default, and models list)
+- `POST /generate` - Generate text (optionally accepts `model_id` to override active model)
 
 Request format for `/generate`:
 ```json
@@ -254,9 +257,22 @@ Request format for `/generate`:
     "prompt": "ܡܪܝܐ",
     "max_new_tokens": 50,
     "temperature": 0.8,
-    "top_k": 40
+    "top_k": 40,
+    "model_id": "assyrian-default"
 }
 ```
+
+The `model_id` field is optional - if omitted, the API's currently active model is used.
+
+### Model Selection
+
+The client fetches available models from `GET /models` on startup and populates a dropdown in the settings panel. When a user selects a model:
+
+1. The selection is saved to localStorage
+2. All subsequent generation requests include the selected `model_id`
+3. The API uses that model for generation (per-request override)
+
+Models marked as `disabled: true` in the API's manifest are shown as "(unavailable)" and cannot be selected.
 
 ## License
 

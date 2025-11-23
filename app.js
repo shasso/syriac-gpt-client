@@ -6,7 +6,8 @@ const CONFIG = {
     fontSize: 16,
     temperature: 0.8,
     maxTokens: 50,
-    topK: 40
+    topK: 40,
+    modelId: null  // null = use API default
 };
 
 let isConnected = false;
@@ -28,6 +29,7 @@ const elements = {
     maxTokensInput: document.getElementById('maxTokensInput'),
     topKInput: document.getElementById('topKInput'),
     apiUrlInput: document.getElementById('apiUrlInput'),
+    modelSelect: document.getElementById('modelSelect'),
     statusIndicator: document.getElementById('statusIndicator'),
     statusText: document.getElementById('statusText'),
     reconnectBtn: document.getElementById('reconnectBtn')
@@ -38,12 +40,44 @@ async function init() {
     loadSettings();
     attachEventListeners();
     await checkConnection();
+    await loadAvailableModels();
     
     // Auto-resize textarea
     elements.messageInput.addEventListener('input', function() {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 120) + 'px';
     });
+}
+
+// Load available models from API
+async function loadAvailableModels() {
+    try {
+        const response = await fetch(`${CONFIG.apiUrl}/models`);
+        if (response.ok) {
+            const data = await response.json();
+            const select = elements.modelSelect;
+            select.innerHTML = '<option value="">API Default</option>';
+            
+            Object.keys(data.models || {}).forEach(modelId => {
+                const model = data.models[modelId];
+                const option = document.createElement('option');
+                option.value = modelId;
+                option.textContent = model.description || modelId;
+                if (model.disabled) {
+                    option.disabled = true;
+                    option.textContent += ' (unavailable)';
+                }
+                select.appendChild(option);
+            });
+            
+            // Restore saved selection
+            if (CONFIG.modelId) {
+                select.value = CONFIG.modelId;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to load models:', e);
+    }
 }
 
 // Load settings from localStorage
@@ -59,6 +93,9 @@ function loadSettings() {
         elements.maxTokensInput.value = CONFIG.maxTokens;
         elements.topKInput.value = CONFIG.topK;
         elements.apiUrlInput.value = CONFIG.apiUrl;
+        if (CONFIG.modelId && elements.modelSelect) {
+            elements.modelSelect.value = CONFIG.modelId;
+        }
     }
     applyFontSettings();
 }
@@ -140,6 +177,11 @@ function attachEventListeners() {
         CONFIG.apiUrl = e.target.value;
         saveSettings();
         checkConnection();
+    });
+
+    elements.modelSelect.addEventListener('change', (e) => {
+        CONFIG.modelId = e.target.value || null;
+        saveSettings();
     });
 
     // Close settings when clicking outside
@@ -231,15 +273,20 @@ async function sendMessage() {
     const loadingId = addLoadingMessage();
 
     try {
+        const payload = {
+            prompt: message,
+            max_new_tokens: CONFIG.maxTokens,
+            temperature: CONFIG.temperature,
+            top_k: CONFIG.topK
+        };
+        if (CONFIG.modelId) {
+            payload.model_id = CONFIG.modelId;
+        }
+        
         const response = await fetch(`${CONFIG.apiUrl}/generate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: message,
-                max_new_tokens: CONFIG.maxTokens,
-                temperature: CONFIG.temperature,
-                top_k: CONFIG.topK
-            })
+            body: JSON.stringify(payload)
         });
 
         // Remove loading indicator

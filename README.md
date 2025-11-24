@@ -176,6 +176,28 @@ Each assistant response includes:
 - ⏱️ **Latency**: Response time
 - 📊 **Total tokens**: Cumulative tokens generated
 
+### Mobile / iPad Notes
+
+On mobile Safari (iOS/iPadOS), the header now uses a sticky layout to remain visible when the browser chrome hides. If you only see "API Default" in the model selector while desktop shows more models, ensure the reverse proxy (nginx in this container) forwards the following endpoints:
+
+```
+location /models { proxy_pass http://gpt_api/models; }
+location /models/select { proxy_pass http://gpt_api/models/select; }
+```
+
+Hard refresh on iPad Safari after changes:
+- Tap address bar then pull down to force reload, or
+- Settings → Safari → Clear History & Website Data (if caching persists).
+
+### Reverse Proxy Requirements
+
+If deploying behind another proxy (e.g., Traefik, Caddy, Nginx ingress), be sure to forward these paths in addition to `/health`, `/generate`, `/metrics`:
+```
+/models
+/models/select
+```
+Without them the model dropdown will show only "API Default".
+
 ## Keyboard Shortcuts
 
 - `Enter`: Send message

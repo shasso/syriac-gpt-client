@@ -36,14 +36,15 @@ body {
     overflow-x: hidden;
 }
 
-/* Local Ramsina font (woff2 + woff) */
+/* Local Ramsina TestA font (internal family name 'Ramsina TestA') */
 @font-face {
-    font-family: 'Ramsina';
+    font-family: 'Ramsina TestA';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('web/Ramsina-Regular.woff2') format('woff2'),
-         url('web/Ramsina-Regular.woff') format('woff');
+    src: local('Ramsina TestA'),
+         url('web/RamsinaTestA-Regular.woff2') format('woff2'),
+         url('web/RamsinaTestA-Regular.woff') format('woff');
 }
 
 .container {

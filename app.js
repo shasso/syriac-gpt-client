@@ -111,6 +111,10 @@ function loadSettings() {
     const saved = localStorage.getItem('modernAssyrianGPTSettings');
     if (saved) {
         Object.assign(CONFIG, JSON.parse(saved));
+        // Backward compatibility: previously saved 'Ramsina' maps to new internal name
+        if (CONFIG.font === 'Ramsina') {
+            CONFIG.font = 'Ramsina TestA';
+        }
         elements.fontSelect.value = CONFIG.font;
         elements.fontSizeRange.value = CONFIG.fontSize;
         elements.fontSizeValue.textContent = CONFIG.fontSize;

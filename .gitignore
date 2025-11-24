@@ -1,0 +1,3 @@
+# Ignore local web assets (fonts, etc.)
+web/
+./web/

@@ -524,3 +524,6 @@ document.addEventListener('click', async (e) => {
         console.warn('Copy not permitted by browser or context.');
     }
 });
+
+// Set dynamic copyright year
+document.getElementById('copyrightYear').textContent = new Date().getFullYear();

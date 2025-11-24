@@ -36,6 +36,16 @@ body {
     overflow-x: hidden;
 }
 
+/* Local Ramsina font (woff2 + woff) */
+@font-face {
+    font-family: 'Ramsina';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('web/Ramsina-Regular.woff2') format('woff2'),
+         url('web/Ramsina-Regular.woff') format('woff');
+}
+
 .container {
     display: flex;
     flex-direction: column;

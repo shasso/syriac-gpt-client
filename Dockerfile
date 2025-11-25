@@ -3,7 +3,8 @@
 FROM nginx:1.27-alpine
 
 # Install brotli module (if available in Alpine repository)
-RUN apk add --no-cache nginx-mod-http-brotli || echo "brotli module not available" && \
+# Install brotli module (if available) and curl for healthcheck
+RUN apk add --no-cache nginx-mod-http-brotli curl || echo "brotli module not available" && \
       mkdir -p /usr/share/nginx/html
 
 # Set build-time metadata
@@ -24,7 +25,9 @@ COPY README.md /usr/share/nginx/html/README.client.md
 COPY TROUBLESHOOTING.md /usr/share/nginx/html/TROUBLESHOOTING.client.md
 
 # Healthcheck: rely on upstream API health or static file availability
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD wget -qO- http://localhost/ || exit 1
+# Use curl for a simple 200 check on the root
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+      CMD curl -fsS http://localhost/ || exit 1
 
 EXPOSE 80
 

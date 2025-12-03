@@ -21,6 +21,7 @@ COPY index.html /usr/share/nginx/html/index.html
 COPY app.js /usr/share/nginx/html/app.js
 COPY style.css /usr/share/nginx/html/style.css
 COPY test.html /usr/share/nginx/html/test.html
+COPY logo_mimalt_small.png /usr/share/nginx/html/logo_mimalt_small.png
 COPY README.md /usr/share/nginx/html/README.client.md
 COPY TROUBLESHOOTING.md /usr/share/nginx/html/TROUBLESHOOTING.client.md
 

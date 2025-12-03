@@ -1,10 +1,11 @@
 # Modern Assyrian GPT Chat Client
 
-A modern, responsive web chat interface for the Modern Assyrian GPT API with customizable Modern Assyrian fonts.
+A modern, responsive web chat interface for the Modern Assyrian GPT API with customizable Modern Assyrian fonts and MIMALT branding.
 
 ## Features
 
 - 🎨 Modern, responsive dark-themed UI optimized for desktop, tablet, and mobile
+- 🖼️ **MIMALT branding** - Integrated logo and institutional footer
 - 🔤 Multiple Modern Assyrian font options (Noto Sans Syriac, Scheherazade New, Ramsina TestA, etc.)
 - ⚙️ Adjustable font size
 - 🎛️ Configurable generation parameters (temperature, max tokens, top-k)

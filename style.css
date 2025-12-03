@@ -80,10 +80,20 @@ body {
 }
 
 .title {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
     font-family: 'Noto Sans Syriac', serif;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.header-logo {
+    display: inline-block;
+    max-width: 50px; /* 25% of original 200px */
+    height: auto;
+    vertical-align: middle;
 }
 
 .subtitle {
@@ -612,6 +622,10 @@ body {
         font-size: 1.5rem;
     }
 
+    .header-logo {
+        max-width: 38px;
+    }
+
     .settings-panel {
         width: 100%;
         right: -100%;
@@ -667,6 +681,10 @@ body {
 
     .title {
         font-size: 1.25rem;
+    }
+
+    .header-logo {
+        max-width: 30px;
     }
 
     .subtitle {

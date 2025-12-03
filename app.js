@@ -21,6 +21,7 @@ const elements = {
     settingsBtn: document.getElementById('settingsBtn'),
     closeSettingsBtn: document.getElementById('closeSettingsBtn'),
     settingsPanel: document.getElementById('settingsPanel'),
+    settingsBackdrop: document.getElementById('settingsBackdrop'),
     fontSelect: document.getElementById('fontSelect'),
     fontSizeRange: document.getElementById('fontSizeRange'),
     fontSizeValue: document.getElementById('fontSizeValue'),
@@ -166,10 +167,18 @@ function attachEventListeners() {
     // Settings
     elements.settingsBtn.addEventListener('click', () => {
         elements.settingsPanel.classList.add('active');
+        elements.settingsBackdrop.classList.add('active');
     });
 
     elements.closeSettingsBtn.addEventListener('click', () => {
         elements.settingsPanel.classList.remove('active');
+        elements.settingsBackdrop.classList.remove('active');
+    });
+
+    // Close settings when clicking backdrop
+    elements.settingsBackdrop.addEventListener('click', () => {
+        elements.settingsPanel.classList.remove('active');
+        elements.settingsBackdrop.classList.remove('active');
     });
 
     // Font settings

@@ -4,15 +4,15 @@ A modern, responsive web chat interface for the Modern Assyrian GPT API with cus
 
 ## Features
 
-- 🎨 Modern, responsive dark-themed UI
-- 🔤 Multiple Modern Assyrian font options (Noto Sans Syriac, Scheherazade New, etc.)
+- 🎨 Modern, responsive dark-themed UI optimized for desktop, tablet, and mobile
+- 🔤 Multiple Modern Assyrian font options (Noto Sans Syriac, Scheherazade New, Ramsina TestA, etc.)
 - ⚙️ Adjustable font size
 - 🎛️ Configurable generation parameters (temperature, max tokens, top-k)
 - 🤖 **Dynamic model selection** - Choose between available GPT models
 - 📋 **Copy to clipboard** - One-click copy for generated text
 - 📊 **Model indicator** - Shows active model in status bar and message metrics
 - 💬 Real-time chat interface
-- 📱 Mobile-friendly design
+- 📱 **Mobile-optimized design** - Full responsive support with iOS Safari compatibility
 - 🔄 Automatic reconnection
 - 💾 Settings persistence (localStorage)
 - ✨ Smooth animations and transitions
@@ -178,16 +178,36 @@ Each assistant response includes:
 
 ### Mobile / iPad Notes
 
-On mobile Safari (iOS/iPadOS), the header now uses a sticky layout to remain visible when the browser chrome hides. If you only see "API Default" in the model selector while desktop shows more models, ensure the reverse proxy (nginx in this container) forwards the following endpoints:
+**Responsive Design:**
+- Optimized layouts for desktop (>1024px), tablet (≤768px), and phone (≤480px)
+- Full-width container on mobile devices for better screen utilization
+- Adaptive font sizes and spacing
+- Touch-friendly button sizes and tap targets
+
+**iOS Safari Compatibility:**
+- Dynamic viewport height (`100dvh`) for proper fullscreen display
+- Safe area insets for devices with notches/home indicators
+- Smooth touch scrolling with `-webkit-overflow-scrolling`
+- 16px minimum input font size prevents iOS zoom-on-focus
+
+**Settings Panel:**
+- Full-screen on mobile with proper scrolling
+- Tap the dark backdrop to close settings
+- Close button always visible and reachable
+- Respects iOS safe areas at bottom
+
+**Model Selection:**
+If you only see "API Default" in the model selector while desktop shows more models, ensure the reverse proxy (nginx in this container) forwards the following endpoints:
 
 ```
 location /models { proxy_pass http://gpt_api/models; }
 location /models/select { proxy_pass http://gpt_api/models/select; }
 ```
 
-Hard refresh on iPad Safari after changes:
+**Cache Refresh:**
+Hard refresh on iPad Safari after updates:
 - Tap address bar then pull down to force reload, or
-- Settings → Safari → Clear History & Website Data (if caching persists).
+- Settings → Safari → Clear History & Website Data (if caching persists)
 
 ### Reverse Proxy Requirements
 

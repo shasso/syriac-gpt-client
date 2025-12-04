@@ -5,7 +5,7 @@ A modern, responsive web chat interface for the Modern Assyrian GPT API with cus
 ## Features
 
 - 🎨 Modern, responsive dark-themed UI optimized for desktop, tablet, and mobile
-- 🖼️ **MIMALT branding** - Integrated logo and institutional footer
+- 🖼️ **MIMALT branding** - Integrated logo (100px desktop, 75px tablet, 60px mobile) and institutional footer
 - 🔤 Multiple Modern Assyrian font options (Noto Sans Syriac, Scheherazade New, Ramsina TestA, etc.)
 - ⚙️ Adjustable font size
 - 🎛️ Configurable generation parameters (temperature, max tokens, top-k)

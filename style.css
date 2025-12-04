@@ -91,7 +91,7 @@ body {
 
 .header-logo {
     display: inline-block;
-    max-width: 50px; /* 25% of original 200px */
+    max-width: 100px; /* 50% of original 200px */
     height: auto;
     vertical-align: middle;
 }
@@ -623,7 +623,7 @@ body {
     }
 
     .header-logo {
-        max-width: 38px;
+        max-width: 75px;
     }
 
     .settings-panel {
@@ -684,7 +684,7 @@ body {
     }
 
     .header-logo {
-        max-width: 30px;
+        max-width: 60px;
     }
 
     .subtitle {
